@@ -15,6 +15,8 @@ class GeminiLLMInterface:
     def __init__(self):
         # Initialize the Gemini API with the API key
         api_key = os.environ.get('GOOGLE_API_KEY')
+        model_name = os.environ.get('GEMINI_MODEL', 'gemini-pro')
+        
         if not api_key:
             # For demo purposes, we'll show what would be needed
             print("Note: To use real Gemini LLM, set your GOOGLE_API_KEY environment variable.")
@@ -22,7 +24,7 @@ class GeminiLLMInterface:
             self.use_mock = True
         else:
             genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-pro')
+            self.model = genai.GenerativeModel(model_name)
             self.use_mock = False
     
     def perform_technical_research(self, query: str, context: str) -> Dict[str, Any]:

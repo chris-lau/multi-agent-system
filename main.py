@@ -12,6 +12,7 @@ from agents.economic_research_agent.economic_research_agent import EconomicResea
 from agents.factcheck_agent.factcheck_agent import FactCheckAgent
 from a2a_protocol import A2AMessage, MessageType
 from tools.example_tools import WebSearchTool, DocumentParsingTool, StatisticalAnalysisTool
+from llm_interface import GeminiLLMInterface
 import time
 import argparse
 import os
@@ -51,14 +52,20 @@ def main():
     parser.add_argument('--api-key', type=str, help='Google Gemini API key (optional)')
     parser.add_argument('--query', type=str, default='Analyze the impact of AI on healthcare',
                         help='Research query to process (default: "Analyze the impact of AI on healthcare")')
+    parser.add_argument('--model', type=str, default='gemini-pro',
+                        help='Gemini model to use (default: "gemini-pro")')
     args = parser.parse_args()
     
     # Set the API key in the environment if provided as an argument
     if args.api_key:
         os.environ['GOOGLE_API_KEY'] = args.api_key
     
+    # Set the model in the environment if provided as an argument
+    os.environ['GEMINI_MODEL'] = args.model
+    
     print("Starting Multi-Agent Research & Analysis System Demo with Tool Integration")
     print("=" * 65)
+    print(f"Using Gemini model: {args.model}")
     
     # Initialize message router
     router = MessageRouter()

@@ -29,13 +29,14 @@ This project implements a multi-agent system that uses specialized agents to ans
 Run the system with optional arguments:
 
 ```bash
-python main.py [--api-key API_KEY] [--query "Your research query here"]
+python main.py [--api-key API_KEY] [--query "Your research query here"] [--model MODEL_NAME]
 ```
 
 ### Options:
 
 - `--api-key`: Google Gemini API key (optional, can also be set as environment variable)
 - `--query`: Research query to process (default: "Analyze the impact of AI on healthcare")
+- `--model`: Gemini model to use (default: "gemini-pro")
 
 ### Examples:
 
