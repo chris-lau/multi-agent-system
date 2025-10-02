@@ -2,13 +2,13 @@
 
 ## Phase 1: MVP (Minimum Viable Product)
 - [x] Create Research Orchestrator Agent with basic A2A protocol implementation
-- [x] Create tech research agent with basic A2A protocol implementation
-- [x] Create economic research agent with basic A2A protocol implementation
+- [x] Create tech agent with basic A2A protocol implementation
+- [x] Create economic agent with basic A2A protocol implementation
 - [x] Create fact-checking agent with basic A2A protocol implementation
 - [x] Implement basic A2A message handling for all agents
-- [x] Implement simple research query interface
-- [x] Develop basic text-based report generation
-- [x] Validate concept through sample research queries
+- [x] Implement simple task interface
+- [x] Develop basic text-based output generation
+- [x] Validate concept through sample tasks
 - [x] Implement tool framework and registry system
 - [x] Create basic tool execution service
 - [x] Enhance each agent with tool usage capabilities
@@ -33,8 +33,8 @@
   - [x] Update tests to work with new tool structure
 
 ## Phase 2: Enhanced Functionality
-- [ ] Add social/cultural research agent
-- [ ] Improve report formatting and structure
+- [ ] Add social/cultural agent
+- [ ] Improve output formatting and structure
 - [ ] Implement basic error handling and retry mechanisms
 - [ ] Add logging and basic monitoring
 - [ ] Add support for multiple orchestrator types (basic, advanced, custom)
@@ -66,16 +66,16 @@
 - [ ] Performance testing and optimization
 
 ## Phase 6: User Experience
-- [ ] Create user dashboard for submitting queries and viewing reports
-- [ ] Add query history and saved reports functionality
+- [ ] Create user dashboard for submitting queries and viewing outputs
+- [ ] Add query history and saved outputs functionality
 - [ ] Implement user feedback mechanisms
-- [ ] Improve report visualization and export options
+- [ ] Improve output visualization and export options
 
 ## Phase 7: Advanced Features
 - [ ] Implement advanced analytics and metrics collection
-- [ ] Add custom research workflow capabilities
+- [ ] Add custom task workflow capabilities
 - [ ] Implement agent auto-scaling based on demand
-- [ ] Add advanced filtering and search in reports
+- [ ] Add advanced filtering and search in outputs
 - [ ] Implement visual orchestrator builder interface for creating custom workflows
 
 ## Phase 8: Performance Optimization

@@ -1,19 +1,19 @@
 # Multi-Agent System
 
-This project implements a multi-agent system that uses specialized agents to address complex tasks across different domains. The system leverages the A2A (Agent-to-Agent) protocol for standardized communication between agents and currently focuses on research tasks using Google's Gemini LLM. The system is designed to support multiple orchestrator types for various specialized domains.
+This project implements a multi-agent system that uses specialized agents to address complex tasks across different domains. The system leverages the A2A (Agent-to-Agent) protocol for standardized communication between agents and currently focuses on analytical tasks using Google's Gemini LLM. The system is designed to support multiple orchestrator types for various specialized domains.
 
 ## Features
 
-- **Configurable Orchestrator Agent**: Coordinates research tasks, aggregates results from specialized agents; supports multiple orchestrator types (basic, advanced, custom workflows)
-- **Technology Research Agent**: Performs technical analysis using Gemini LLM
-- **Economic Research Agent**: Performs economic analysis using Gemini LLM
-- **Social/Cultural Research Agent**: Analyzes social and cultural impacts using Gemini LLM
+- **Configurable Orchestrator Agent**: Coordinates tasks, aggregates results from specialized agents; supports multiple orchestrator types (basic, advanced, custom workflows)
+- **Technology Agent**: Performs technical analysis using Gemini LLM
+- **Economic Agent**: Performs economic analysis using Gemini LLM
+- **Social/Cultural Agent**: Analyzes social and cultural impacts using Gemini LLM
 - **Fact-Checking Agent**: Validates information from other agents using Gemini LLM
 - **A2A Protocol Compliance**: Standardized communication between agents
-- **Tool Framework**: Enhanced research capabilities through integrated tools with autonomous discovery and selection
+- **Tool Framework**: Enhanced capabilities through integrated tools with autonomous discovery and selection
 - **JSON-Based Workflow Configuration**: Custom orchestrator behaviors using JSON configuration files
 - **Modular Architecture**: Agents can be developed and tested independently
-- **Visual Orchestrator Builder Ready**: Compatible with visual interface for creating custom research workflows (future feature)
+- **Visual Orchestrator Builder Ready**: Compatible with visual interface for creating custom task workflows (future feature)
 
 ## Prerequisites
 
@@ -33,13 +33,13 @@ This project implements a multi-agent system that uses specialized agents to add
 Run the system with optional arguments:
 
 ```bash
-python main.py [--api-key API_KEY] [--query "Your research query here"] [--model MODEL_NAME]
+python main.py [--api-key API_KEY] [--query "Your task or query here"] [--model MODEL_NAME]
 ```
 
 ### Options:
 
 - `--api-key`: Google Gemini API key (optional, can also be set as environment variable)
-- `--query`: Research query to process (default: "Analyze the impact of AI on healthcare")
+- `--query`: Task or query to process (default: "Analyze the impact of AI on healthcare")
 - `--model`: Gemini model to use (default: "gemini-pro")
 - `--orchestrator`: Orchestrator type to use (basic, advanced, custom; default: "basic")
 - `--workflow-config`: Path to JSON workflow configuration file (for custom orchestrator)
@@ -63,16 +63,16 @@ python main.py [--api-key API_KEY] [--query "Your research query here"] [--model
 
 ## How It Works
 
-1. The Orchestrator Agent receives a research query
+1. The Orchestrator Agent receives a task or query
 2. It discovers and selects relevant tools using the tool framework
-3. It distributes specialized research tasks to specialized agents (Tech, Economic, Social/Cultural)
-4. Each research agent discovers and selects appropriate tools autonomously for enhanced analysis
-5. Each research agent uses the Gemini LLM to perform domain-specific analysis
+3. It distributes specialized tasks to specialized agents (Tech, Economic, Social/Cultural)
+4. Each agent discovers and selects appropriate tools autonomously for enhanced processing
+5. Each agent uses the Gemini LLM to perform domain-specific analysis
 6. Results are sent back to the Orchestrator Agent
 7. The Orchestrator sends results to the Fact-Checking Agent for validation
 8. The Fact-Checking Agent discovers and uses validation tools autonomously
 9. The Fact-Checking Agent uses the Gemini LLM to validate the information
-10. The Orchestrator generates a final comprehensive report
+10. The Orchestrator generates a final comprehensive output
 
 ## API Key
 
@@ -103,18 +103,18 @@ If no API key is provided, the system will use mock responses for demonstration 
   - `unit/core/test_llm_interface.py`: Tests for LLM interface functionality
   - `unit/tools/test_tool_execution_service.py`: Tests for tool execution service
 - `agents/`: Contains individual agent implementations
-  - `orchestrator_agent/`: Research Orchestrator agent directory
-    - `research_orchestrator_agent.py`: Coordinates the research process
+  - `orchestrator_agent/`: Orchestrator agent directory
+    - `research_orchestrator_agent.py`: Coordinates the task process
     - `README.md`: Documentation for the orchestrator agent
-  - `tech_research_agent/`: Tech research agent directory
-    - `tech_research_agent.py`: Performs technical research
-    - `README.md`: Documentation for the tech research agent
-  - `economic_research_agent/`: Economic research agent directory
-    - `economic_research_agent.py`: Performs economic research
-    - `README.md`: Documentation for the economic research agent
-  - `social_cultural_research_agent/`: Social/Cultural research agent directory
+  - `tech_research_agent/`: Tech agent directory (current implementation focused on research tasks)
+    - `tech_research_agent.py`: Performs technical analysis
+    - `README.md`: Documentation for the tech agent
+  - `economic_research_agent/`: Economic agent directory (current implementation focused on research tasks)
+    - `economic_research_agent.py`: Performs economic analysis
+    - `README.md`: Documentation for the economic agent
+  - `social_cultural_research_agent/`: Social/Cultural agent directory (current implementation focused on research tasks)
     - `social_cultural_research_agent.py`: Analyzes social and cultural impacts
-    - `README.md`: Documentation for the social/cultural research agent
+    - `README.md`: Documentation for the social/cultural agent
   - `factcheck_agent/`: Fact-check agent directory
-    - `factcheck_agent.py`: Validates research results
+    - `factcheck_agent.py`: Validates results
     - `README.md`: Documentation for the fact-check agent

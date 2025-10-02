@@ -2,24 +2,24 @@
 ## Using A2A Protocol
 
 ### Overview
-A multi-agent system where domain-specific orchestrators coordinate specialized agents to address complex tasks across different domains. Each agent implements the A2A protocol for standardized communication and integrates with various tools for enhanced capabilities through autonomous tool discovery and selection. The system currently implements a research orchestrator for multi-domain analysis, with support for additional orchestrator types for other specialized domains.
+A multi-agent system where domain-specific orchestrators coordinate specialized agents to address complex tasks across different domains. Each agent implements the A2A protocol for standardized communication and integrates with various tools for enhanced capabilities through autonomous tool discovery and selection. The system currently implements an orchestrator for multi-domain analysis, with support for additional orchestrator types for other specialized domains.
 
 ### Components
 
 #### 1. Research Orchestrator
-- **Role**: Coordinates research tasks, aggregates results, manages tool usage, enables autonomous tool discovery and selection for research tasks
+- **Role**: Coordinates tasks, aggregates results, manages tool usage, enables autonomous tool discovery and selection
 - **Agent ID**: research-orchestrator-agent
 - **Types**: Basic, Advanced, Custom (defined via JSON workflow configuration)
 - **A2A Capabilities**:
-  - Sends research requests to specialized agents
+  - Sends task requests to specialized agents
   - Receives and validates results
-  - Manages research workflow
-  - Generates final report
-  - Discovers available tools for enhanced research
+  - Manages task workflow
+  - Generates final output
+  - Discovers available tools for enhanced processing
   - Supports configurable workflow patterns (sequential, parallel, conditional)
 - **A2A Message Types**:
-  - `request:research:task` (outgoing)
-  - `response:research:results` (incoming)
+  - `request:task` (outgoing)
+  - `response:results` (incoming)
   - `request:discover-tools` (outgoing)
   - `response:available-tools` (incoming)
   - `request:use-tool` (outgoing)
@@ -28,7 +28,7 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 
 #### 2. General Orchestrator Framework
 - **Role**: Provides the framework for multiple orchestrator types to coordinate specialized agents for different task domains
-- **Types**: Research, Business Analysis, Technical Support, Customer Service, etc. (defined via JSON workflow configuration)
+- **Types**: Task Processing, Business Analysis, Technical Support, Customer Service, etc. (defined via JSON workflow configuration)
 - **A2A Capabilities**:
   - Supports multiple orchestrator instances for different domains
   - Manages cross-orchestrator communication for complex multi-domain tasks
@@ -41,20 +41,20 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - `response:available-tools` (incoming)
 - **Configuration**: Supports JSON-based workflow definitions for custom orchestrator behavior
 
-#### 2. Technology Research Agent
-- **Role**: Researches technical aspects of queries using specialized tools with autonomous discovery and selection
+#### 2. Technology Agent
+- **Role**: Analyzes technical aspects of queries using specialized tools with autonomous discovery and selection
 - **A2A Capabilities**:
   - Receives tech-focused sub-queries from orchestrators
   - Performs technical analysis
   - Returns tech-focused results
   - Discovers and selects appropriate tools autonomously
 - **A2A Message Types**:
-  - `request:research:task` (incoming)
-  - `response:research:results` (outgoing)
+  - `request:task` (incoming)
+  - `response:results` (outgoing)
   - `request:discover-tools` (outgoing)
   - `response:available-tools` (incoming)
 
-#### 3. Economic Research Agent
+#### 3. Economic Agent
 - **Role**: Analyzes economic implications using financial and economic tools with autonomous discovery and selection
 - **A2A Capabilities**:
   - Receives economic sub-queries from orchestrators
@@ -62,9 +62,12 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - Returns economic-focused results
   - Discovers and selects appropriate tools autonomously
 - **A2A Message Types**:
-  - Same as above
+  - `request:task` (incoming)
+  - `response:results` (outgoing)
+  - `request:discover-tools` (outgoing)
+  - `response:available-tools` (incoming)
 
-#### 4. Social/Cultural Research Agent
+#### 4. Social/Cultural Agent
 - **Role**: Analyzes social/cultural impacts using sociological tools with autonomous discovery and selection
 - **A2A Capabilities**:
   - Receives social sub-queries from orchestrators
@@ -72,8 +75,8 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - Returns social-focused results
   - Discovers and selects appropriate tools autonomously
 - **A2A Message Types**:
-  - `request:research:task` (incoming)
-  - `response:research:results` (outgoing)
+  - `request:task` (incoming)
+  - `response:results` (outgoing)
   - `request:discover-tools` (outgoing)
   - `response:available-tools` (incoming)
 
@@ -115,17 +118,17 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 }
 ```
 
-#### Research Task Message Structure
+#### Task Message Structure
 ```
 {
-  "type": "request:research:task",
+  "type": "request:task",
   "version": "1.0",
   "id": "unique-message-id",
   "timestamp": "ISO-8601-timestamp",
   "sender": "sender-agent-id",
   "receiver": "receiver-agent-id",
   "payload": {
-    "query": "research-query-string",
+    "query": "task-query-string",
     "context": "additional-context",
     "task_type": "technical|economic|social|factcheck",
     "deadline": "optional-deadline"
@@ -150,7 +153,7 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   "payload": {
     "query": "orchestrator-task-query-string",
     "context": "additional-orchestrator-context",
-    "task_type": "business|research|support|etc",
+    "task_type": "business|analysis|support|etc",
     "required_agents": ["agent-ids"],
     "deadline": "optional-deadline"
   },
@@ -177,7 +180,7 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   },
   "metadata": {
     "priority": "high|normal|low",
-    "search_context": "context for the search (e.g., research query)"
+    "search_context": "context for the search (e.g., task query)"
   }
 }
 ```
@@ -197,12 +200,12 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   "description": "Brief description",
   "supportedMessageTypes": [
     {
-      "type": "request:research:task",
+      "type": "request:task",
       "direction": "incoming",
       "schema": "schema-reference"
     },
     {
-      "type": "response:research:results",
+      "type": "response:results",
       "direction": "outgoing",
       "schema": "schema-reference"
     },
@@ -262,7 +265,7 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 - Define custom orchestrator behaviors using JSON configuration files
 - Support for different orchestrator types (basic, advanced, custom)
 - Configuration schema for defining agent interactions and message routing
-- Conditional logic and branching in research workflows
+- Conditional logic and branching in task workflows
 - Support for sequential, parallel, and conditional execution patterns
 - Visual builder compatibility for generating workflow configurations
 
@@ -316,16 +319,16 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 - Define custom orchestrator behaviors using JSON configuration files
 - Support for different orchestrator types (basic, advanced, custom)
 - Configuration schema for defining agent interactions and message routing
-- Conditional logic and branching in research workflows
+- Conditional logic and branching in task workflows
 - Support for sequential, parallel, and conditional execution patterns
 - Visual builder compatibility for generating workflow configurations
 
 #### Visual Orchestrator Builder (Future Implementation)
-- User-friendly interface for creating custom research workflows
-- Drag-and-drop functionality for arranging research steps
+- User-friendly interface for creating custom task workflows
+- Drag-and-drop functionality for arranging task steps
 - Configuration export in JSON format for use by the orchestrator factory
 - Workflow validation and error checking
-- Template library for common research patterns
+- Template library for common task patterns
 - Real-time preview of workflow execution
 
 ### Tool Management System
@@ -364,4 +367,4 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 - **Configuration Management**: Individual tool configuration through dedicated files
 - **Testing**: Individual test suites for each tool in their respective directories
 
-This specification provides a framework for agents to autonomously discover and select appropriate tools to enhance their research and analysis capabilities while maintaining the modular, A2A protocol-based architecture.
+This specification provides a framework for agents to autonomously discover and select appropriate tools to enhance their task processing capabilities while maintaining the modular, A2A protocol-based architecture.

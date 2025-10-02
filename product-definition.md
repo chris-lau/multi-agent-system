@@ -1,7 +1,7 @@
 # Multi-Agent System - Product Definition
 
 ## Product Overview
-The Multi-Agent System is an AI-powered platform that uses multiple specialized agents to address complex tasks across different domains. By leveraging the A2A (Agent-to-Agent) protocol for standardized communication and integrating with various tools through autonomous discovery and selection, the system provides comprehensive, validated results with modular, independently deployable components. The system currently implements a research orchestrator for multi-domain analysis, with support for additional orchestrator types for other specialized domains.
+The Multi-Agent System is an AI-powered platform that uses multiple specialized agents to address complex tasks across different domains. By leveraging the A2A (Agent-to-Agent) protocol for standardized communication and integrating with various tools through autonomous discovery and selection, the system provides comprehensive, validated results with modular, independently deployable components. The system currently implements an orchestrator for multi-domain analysis, with support for additional orchestrator types for other specialized domains.
 
 ## Problem Statement
 Traditional tools often provide limited perspectives, lack validation, and struggle with complex multi-domain tasks. Users need a system that can:
@@ -12,10 +12,10 @@ Traditional tools often provide limited perspectives, lack validation, and strug
 - Leverage specialized tools autonomously for enhanced capabilities
 
 ## Solution
-A multi-agent system where specialized agents handle different domains, coordinated by domain-specific orchestrators that ensure information validation and comprehensive reporting. Agents autonomously discover and select appropriate tools for their tasks. All communication follows the A2A protocol for interoperability and standardized messaging.
+A multi-agent system where specialized agents handle different domains, coordinated by domain-specific orchestrators that ensure information validation and comprehensive output. Agents autonomously discover and select appropriate tools for their tasks. All communication follows the A2A protocol for interoperability and standardized messaging.
 
 ## Target Users
-- Research analysts
+- Business analysts
 - Academic researchers
 - Business intelligence teams
 - Policy makers
@@ -27,7 +27,7 @@ A multi-agent system where specialized agents handle different domains, coordina
 2. **Fact-Checking Integration**: Built-in validation of all information
 3. **Modular Architecture**: Independent, deployable agents that can be scaled individually
 4. **A2A Protocol Compliance**: Standardized communication for agent interoperability
-5. **Comprehensive Reporting**: Unified reports combining multiple perspectives
+5. **Comprehensive Output**: Unified outputs combining multiple perspectives
 6. **Autonomous Tool Discovery and Selection**: Agents can discover and select appropriate tools for their tasks
 7. **Enhanced Capabilities**: Integration with various specialized tools for improved outcomes
 8. **Real Tool Implementations**: Tools with actual functionality (web search, document parsing, statistical analysis) rather than mock implementations
@@ -43,12 +43,12 @@ A multi-agent system where specialized agents handle different domains, coordina
 4. Specialized agents (tech, economic, social/cultural) discover and select appropriate tools autonomously
 5. Specialized agents perform domain-specific processing using appropriate tools with real implementations
 6. Fact-checking agent validates all information and uses validation tools autonomously
-7. System generates comprehensive, validated report or output
+7. System generates comprehensive, validated output
 8. User receives detailed analysis with multiple perspectives
 
 ## Success Metrics
 - Query completion rate
-- Average time to generate report
+- Average time to generate output
 - User satisfaction score
 - Accuracy of information (measured via fact-checking)
 - Agent uptime and response time
@@ -59,7 +59,7 @@ A multi-agent system where specialized agents handle different domains, coordina
 - Each agent must be independently deployable
 - All agents must implement A2A protocol
 - System must handle agent failures gracefully
-- Reports must include source attribution
+- Output must include source attribution
 - Response time should be under 60 seconds for standard queries
 - Agents must be able to discover and select appropriate tools autonomously
 - Tools must be independently manageable with separate files and READMEs
@@ -69,14 +69,14 @@ A multi-agent system where specialized agents handle different domains, coordina
 - Error handling for external API calls with fallback mechanisms
 - Support for multiple orchestrator types through JSON-based workflow configurations
 - Visual orchestrator builder compatibility for workflow generation
-- Configurable research workflows with conditional logic support
+- Configurable task workflows with conditional logic support
 - Backward compatibility with existing basic orchestrator functionality
 
 ## Competitive Advantages
 - Modular architecture allowing independent agent scaling
 - A2A protocol ensuring interoperability
 - Built-in fact-checking for information validation
-- Multi-perspective analysis in a single system
+- Multi-perspective processing in a single system
 - Standardized communication framework
 - Autonomous tool discovery and selection capabilities
 - Enhanced capabilities through tool integration
@@ -84,11 +84,11 @@ A multi-agent system where specialized agents handle different domains, coordina
 - Visual builder for custom workflow creation
 
 ## MVP Scope
-- 4 core agents (Research Orchestrator Agent, tech research, economic research, fact-checking)
+- 4 core agents (Research Orchestrator Agent, tech, economic, fact-checking)
 - Basic A2A protocol implementation
-- Simple research query interface
-- Text-based report generation
-- Validation of concept through sample research queries
+- Simple task interface
+- Text-based output generation
+- Validation of concept through sample tasks
 - Foundation for additional orchestrator types
 - Tool framework and registry system
 - Basic tool execution service
@@ -99,12 +99,12 @@ A multi-agent system where specialized agents handle different domains, coordina
 - Foundation for orchestrator factory pattern to support multiple orchestrator types
 
 ## Phase 2: Enhanced Functionality Scope
-- Add social/cultural research agent
-- Improve report formatting and structure
+- Add social/cultural agent
+- Improve output formatting and structure
 - Implement basic error handling and retry mechanisms
 - Add logging and basic monitoring
 - Add support for multiple orchestrator types (basic, advanced, custom)
-- Enhance research orchestrator with additional capabilities
+- Enhance orchestrator with additional capabilities
 
 ## Phase 3: Robustness & Reliability Scope
 - Implement comprehensive error handling and timeout mechanisms
@@ -112,7 +112,7 @@ A multi-agent system where specialized agents handle different domains, coordina
 - Implement message queuing for reliability
 - Add health checks and agent status monitoring
 - Implement JSON-based workflow configuration system for orchestrators
-- Establish framework for additional orchestrator types beyond research
+- Establish framework for additional orchestrator types
 
 ## Phase 4: Tool Enhancement Scope
 - Refactor tools into independently manageable directories with separate files and READMEs
