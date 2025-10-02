@@ -6,12 +6,14 @@ import os
 # Add the project root to sys.path to import from subdirectories
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from agents.orchestrator_agent.orchestrator_agent import OrchestratorAgent
+from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
 from agents.tech_research_agent.tech_research_agent import TechResearchAgent
 from agents.economic_research_agent.economic_research_agent import EconomicResearchAgent
 from agents.factcheck_agent.factcheck_agent import FactCheckAgent
 from a2a_protocol import A2AMessage, MessageType
-from tools.example_tools import WebSearchTool, DocumentParsingTool, StatisticalAnalysisTool
+from tools.web_search_tool.web_search_tool import WebSearchTool
+from tools.document_parser_tool.document_parser_tool import DocumentParsingTool
+from tools.statistical_analysis_tool.statistical_analysis_tool import StatisticalAnalysisTool
 from llm_interface import GeminiLLMInterface
 import time
 import argparse
@@ -71,7 +73,7 @@ def main():
     router = MessageRouter()
     
     # Initialize all agents
-    orchestrator = OrchestratorAgent()
+    orchestrator = ResearchOrchestratorAgent()
     tech_agent = TechResearchAgent()
     economic_agent = EconomicResearchAgent()
     factcheck_agent = FactCheckAgent()
@@ -82,7 +84,7 @@ def main():
     orchestrator.tool_registry.register_tool(StatisticalAnalysisTool())
     
     # Register agents with router
-    router.register_agent("orchestrator-agent", orchestrator)
+    router.register_agent("research-orchestrator-agent", orchestrator)
     router.register_agent("tech-research-agent", tech_agent)
     router.register_agent("economic-research-agent", economic_agent)
     router.register_agent("factcheck-agent", factcheck_agent)
@@ -95,7 +97,7 @@ def main():
             return True
         return router_send_message
     
-    orchestrator.client.send_message = create_router_sender(router, "orchestrator-agent")
+    orchestrator.client.send_message = create_router_sender(router, "research-orchestrator-agent")
     tech_agent.client.send_message = create_router_sender(router, "tech-research-agent")
     economic_agent.client.send_message = create_router_sender(router, "economic-research-agent")
     factcheck_agent.client.send_message = create_router_sender(router, "factcheck-agent")

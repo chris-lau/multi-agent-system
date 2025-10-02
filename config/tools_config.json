@@ -1,0 +1,27 @@
+{
+  "web_search_tool": {
+    "default_num_results": 5,
+    "enable_caching": true,
+    "cache_duration_minutes": 60,
+    "timeout_seconds": 30
+  },
+  "document_parser_tool": {
+    "supported_formats": [
+      "pdf",
+      "docx",
+      "txt",
+      "rtf"
+    ],
+    "max_file_size_mb": 10,
+    "enable_caching": true,
+    "cache_duration_minutes": 1440
+  },
+  "statistical_analysis_tool": {
+    "max_data_points": 10000,
+    "precision": 2,
+    "supported_analysis_types": [
+      "descriptive",
+      "correlation"
+    ]
+  }
+}

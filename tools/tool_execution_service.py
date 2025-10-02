@@ -4,6 +4,7 @@ Handles execution of tools requested by agents
 """
 from typing import Dict, Any, Optional
 from tools.tool_framework import ToolRegistry, Tool
+from tools.tool_discovery import load_tool_instances
 import time
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -13,12 +14,22 @@ import queue
 class ToolExecutionService:
     """Service to execute tools requested by agents"""
     
-    def __init__(self, registry: ToolRegistry):
-        self.registry = registry
+    def __init__(self, registry: ToolRegistry = None):
+        self.registry = registry if registry is not None else ToolRegistry()
         self.execution_history = []
         self.max_workers = 5  # Maximum concurrent tool executions
         self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
         self.lock = threading.Lock()
+        
+        # Load tools automatically if no registry was provided
+        if registry is None:
+            self.load_default_tools()
+    
+    def load_default_tools(self):
+        """Load all available tools using the discovery mechanism"""
+        tool_instances = load_tool_instances()
+        for tool in tool_instances:
+            self.registry.register_tool(tool)
     
     def execute_tool(self, tool_id: str, **params) -> Optional[Dict[str, Any]]:
         """Execute a single tool with given parameters"""

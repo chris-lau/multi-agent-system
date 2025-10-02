@@ -1,6 +1,6 @@
-# Orchestrator Agent
+# Research Orchestrator Agent
 
-The Orchestrator Agent coordinates research tasks, aggregates results from specialized agents, manages workflow, and generates final reports.
+The Research Orchestrator Agent coordinates research tasks, aggregates results from specialized agents, manages workflow, and generates final reports.
 
 ## Functionality
 
@@ -24,7 +24,7 @@ The Orchestrator Agent coordinates research tasks, aggregates results from speci
 
 ## Configuration
 
-- Agent ID: `orchestrator-agent`
+- Agent ID: `research-orchestrator-agent`
 - Supported message types: `response:research:results`, `response:factcheck:results`
 
 ## Usage

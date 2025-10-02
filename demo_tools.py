@@ -3,7 +3,9 @@ Demo script to showcase the tool framework
 """
 from tools.tool_framework import ToolRegistry
 from tools.tool_execution_service import ToolExecutionService
-from tools.example_tools import WebSearchTool, DocumentParsingTool, StatisticalAnalysisTool
+from tools.web_search_tool.web_search_tool import WebSearchTool
+from tools.document_parser_tool.document_parser_tool import DocumentParsingTool
+from tools.statistical_analysis_tool.statistical_analysis_tool import StatisticalAnalysisTool
 
 
 def main():

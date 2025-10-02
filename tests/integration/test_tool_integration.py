@@ -1,10 +1,13 @@
 """
 Test script to specifically demonstrate tool integration with agents
 """
-from agents.orchestrator_agent.orchestrator_agent import OrchestratorAgent
+import pytest
+from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
 from agents.tech_research_agent.tech_research_agent import TechResearchAgent
 from agents.economic_research_agent.economic_research_agent import EconomicResearchAgent
-from tools.example_tools import WebSearchTool, DocumentParsingTool, StatisticalAnalysisTool
+from tools.web_search_tool.web_search_tool import WebSearchTool
+from tools.document_parser_tool.document_parser_tool import DocumentParsingTool
+from tools.statistical_analysis_tool.statistical_analysis_tool import StatisticalAnalysisTool
 from a2a_protocol import A2AMessage, MessageType
 
 
@@ -13,7 +16,7 @@ def test_tool_integration():
     print("=" * 40)
     
     # Create orchestrator with tool registry
-    orchestrator = OrchestratorAgent()
+    orchestrator = ResearchOrchestratorAgent()
     
     # Register tools
     orchestrator.tool_registry.register_tool(WebSearchTool())

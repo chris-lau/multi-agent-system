@@ -10,11 +10,11 @@ from tools.tool_execution_service import ToolExecutionService
 from tools.tool_framework import ToolRegistry
 
 
-class OrchestratorAgent:
+class ResearchOrchestratorAgent:
     """Research Orchestrator Agent - Coordinates research tasks and aggregates results"""
     
     def __init__(self):
-        self.agent_id = "orchestrator-agent"
+        self.agent_id = "research-orchestrator-agent"
         self.client = A2AClient(self.agent_id)
         self.research_results = {}
         self.agents = {
