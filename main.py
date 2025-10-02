@@ -1,0 +1,121 @@
+"""
+Main application to demonstrate the Multi-Agent Research & Analysis System with Tool Integration
+"""
+import sys
+import os
+# Add the project root to sys.path to import from subdirectories
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from agents.orchestrator_agent.orchestrator_agent import OrchestratorAgent
+from agents.tech_research_agent.tech_research_agent import TechResearchAgent
+from agents.economic_research_agent.economic_research_agent import EconomicResearchAgent
+from agents.factcheck_agent.factcheck_agent import FactCheckAgent
+from a2a_protocol import A2AMessage, MessageType
+from tools.example_tools import WebSearchTool, DocumentParsingTool, StatisticalAnalysisTool
+import time
+import argparse
+import os
+
+
+class MessageRouter:
+    """Simple message router to handle A2A messages between agents"""
+    def __init__(self):
+        self.message_queue = []
+        self.agents = {}
+    
+    def register_agent(self, agent_id, agent):
+        """Register an agent with the router"""
+        self.agents[agent_id] = agent
+    
+    def send_message(self, message):
+        """Add a message to the queue"""
+        self.message_queue.append(message)
+    
+    def process_messages(self):
+        """Process all messages in the queue until empty"""
+        while self.message_queue:
+            # Process all current messages before checking for new ones
+            current_queue = self.message_queue[:]
+            self.message_queue = []  # Clear the queue for new messages
+            
+            for message in current_queue:
+                if message.receiver in self.agents:
+                    print(f"Router: Forwarding {message.type} from {message.sender} to {message.receiver}")
+                    self.agents[message.receiver].receive_message(message)
+                else:
+                    print(f"Router: Unknown receiver {message.receiver}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Multi-Agent Research & Analysis System')
+    parser.add_argument('--api-key', type=str, help='Google Gemini API key (optional)')
+    parser.add_argument('--query', type=str, default='Analyze the impact of AI on healthcare',
+                        help='Research query to process (default: "Analyze the impact of AI on healthcare")')
+    args = parser.parse_args()
+    
+    # Set the API key in the environment if provided as an argument
+    if args.api_key:
+        os.environ['GOOGLE_API_KEY'] = args.api_key
+    
+    print("Starting Multi-Agent Research & Analysis System Demo with Tool Integration")
+    print("=" * 65)
+    
+    # Initialize message router
+    router = MessageRouter()
+    
+    # Initialize all agents
+    orchestrator = OrchestratorAgent()
+    tech_agent = TechResearchAgent()
+    economic_agent = EconomicResearchAgent()
+    factcheck_agent = FactCheckAgent()
+    
+    # Register tools with the orchestrator's tool registry
+    orchestrator.tool_registry.register_tool(WebSearchTool())
+    orchestrator.tool_registry.register_tool(DocumentParsingTool())
+    orchestrator.tool_registry.register_tool(StatisticalAnalysisTool())
+    
+    # Register agents with router
+    router.register_agent("orchestrator-agent", orchestrator)
+    router.register_agent("tech-research-agent", tech_agent)
+    router.register_agent("economic-research-agent", economic_agent)
+    router.register_agent("factcheck-agent", factcheck_agent)
+    
+    # Patch the agents' send_message method to use the router
+    def create_router_sender(router, agent_id):
+        def router_send_message(receiver, message):
+            print(f"A2A Client {agent_id} sending message to {receiver}: {message.type}")
+            router.send_message(message)
+            return True
+        return router_send_message
+    
+    orchestrator.client.send_message = create_router_sender(router, "orchestrator-agent")
+    tech_agent.client.send_message = create_router_sender(router, "tech-research-agent")
+    economic_agent.client.send_message = create_router_sender(router, "economic-research-agent")
+    factcheck_agent.client.send_message = create_router_sender(router, "factcheck-agent")
+    
+    print("\nAgent capabilities:")
+    print("Orchestrator:", orchestrator.get_capabilities()["name"])
+    print("Tech Agent:", tech_agent.get_capabilities()["name"])
+    print("Economic Agent:", economic_agent.get_capabilities()["name"])
+    print("Factcheck Agent:", factcheck_agent.get_capabilities()["name"])
+    
+    # Use the query provided as an argument or the default
+    research_query = args.query
+    
+    print(f"\nInitiating research for query: '{research_query}'")
+    print("Note: Tool usage demonstration included in agent processing")
+    orchestrator.process_research_request(research_query)
+    
+    # Process messages in the queue
+    print("\nProcessing messages...")
+    router.process_messages()
+    
+    print("\nDemo completed!")
+    print("\nTool usage demonstration:")
+    print("- Each agent has been enhanced with tool usage capabilities")
+    print("- New A2A protocol messages for tool requests and results have been added")
+    print("- Tool framework enables modular enhancement of agent capabilities")
+
+
+if __name__ == "__main__":
+    main()
