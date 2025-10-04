@@ -211,3 +211,39 @@ def test_main_script_execution():
     """Test that main can be executed as a script"""
     # Verify that __name__ check works
     assert __name__ != "__main__"  # This is running as a test, not as main
+
+
+def test_create_orchestrator_basic():
+    """Test create_orchestrator function with basic type"""
+    from main import create_orchestrator
+    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
+    
+    orchestrator = create_orchestrator('basic')
+    assert isinstance(orchestrator, ResearchOrchestratorAgent)
+
+
+def test_create_orchestrator_advanced():
+    """Test create_orchestrator function with advanced type"""
+    from main import create_orchestrator
+    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
+    
+    orchestrator = create_orchestrator('advanced')
+    assert isinstance(orchestrator, ResearchOrchestratorAgent)
+
+
+def test_create_orchestrator_custom():
+    """Test create_orchestrator function with custom type"""
+    from main import create_orchestrator
+    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
+    
+    orchestrator = create_orchestrator('custom')
+    assert isinstance(orchestrator, ResearchOrchestratorAgent)
+
+
+def test_create_orchestrator_default():
+    """Test create_orchestrator function with default behavior"""
+    from main import create_orchestrator
+    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
+    
+    orchestrator = create_orchestrator('unknown-type')
+    assert isinstance(orchestrator, ResearchOrchestratorAgent)

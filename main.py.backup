@@ -47,8 +47,6 @@ class MessageRouter:
                     print(f"Router: Forwarding {message.type} from {message.sender} to {message.receiver}")
                     self.agents[message.receiver].receive_message(message)
                 else:
-                    print(f"Router: Unknown receiver {message.receiver}")
-
 
 def create_orchestrator(orchestrator_type: str):
     """Factory function to create appropriate orchestrator based on type"""
@@ -65,6 +63,8 @@ def create_orchestrator(orchestrator_type: str):
     else:  # default to basic
         from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
         return ResearchOrchestratorAgent()
+
+                    print(f"Router: Unknown receiver {message.receiver}")
 
 
 def main():

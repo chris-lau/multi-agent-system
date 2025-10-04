@@ -118,6 +118,31 @@ class TestTechResearchAgent:
         
         # Verify that send_message was called (which means a response was sent)
         assert agent.client.send_message.called
+
+    @patch('agents.tech_research_agent.tech_research_agent.TechResearchAgent._perform_research_with_retry')
+    @patch('builtins.print')
+    def test_handle_research_task_failure(self, mock_print, mock_perform_research_with_retry):
+        """Test handling of research tasks when research fails after retries"""
+        agent = TechResearchAgent()
+        
+        # Mock the LLM interface and client
+        agent.client.send_message = Mock()
+        mock_perform_research_with_retry.return_value = None  # Simulate failure after retries
+        
+        message = A2AMessage.create_message(
+            MessageType.REQUEST_RESEARCH_TASK,
+            "research-orchestrator-agent",
+            "tech-research-agent",
+            {
+                "query": "test query",
+                "context": "research the technical aspects of this query"
+            }
+        )
+        
+        agent.handle_research_task(message)
+        
+        # Verify that send_message was NOT called (no response sent on failure)
+        assert not agent.client.send_message.called
     
     @patch('builtins.print')
     def test_handle_tool_result(self, mock_print):
@@ -153,6 +178,121 @@ class TestTechResearchAgent:
         
         mock_llm_instance.perform_technical_research.assert_called_once_with(query, context)
         assert result == expected_result
+
+    @patch('time.sleep')
+    @patch('agents.tech_research_agent.tech_research_agent.TechResearchAgent.perform_technical_research')
+    def test_perform_research_with_retry_success_on_second_attempt(self, mock_perform_research, mock_sleep):
+        """Test retry mechanism - succeeds on second attempt"""
+        agent = TechResearchAgent()
+        
+        # Configure mock to fail first, then succeed
+        mock_perform_research.side_effect = [
+            Exception("First attempt failed"),
+            {"result": "success"}
+        ]
+        
+        query = "test query"
+        context = "test context"
+        
+        result = agent._perform_research_with_retry(query, context)
+        
+        # Should have called perform_technical_research twice
+        assert mock_perform_research.call_count == 2
+        # Should have called sleep once (between attempts)
+        assert mock_sleep.call_count == 1
+        # Should return the success result
+        assert result == {"result": "success"}
+
+    @patch('time.sleep')
+    @patch('agents.tech_research_agent.tech_research_agent.TechResearchAgent.perform_technical_research')
+    def test_perform_research_with_retry_all_failures(self, mock_perform_research, mock_sleep):
+        """Test retry mechanism - fails after all attempts"""
+        agent = TechResearchAgent()
+        agent.max_retries = 3  # Ensure agent uses 3 retries in test
+        
+        # Configure mock to fail every time
+        mock_perform_research.side_effect = Exception("Always fails")
+        
+        query = "test query"
+        context = "test context"
+        
+        result = agent._perform_research_with_retry(query, context)
+        
+        # Should have called perform_technical_research max_retries times
+        assert mock_perform_research.call_count == 3
+        # Should have called sleep twice (between 3 attempts)
+        assert mock_sleep.call_count == 2
+        # Should return None when all attempts fail
+        assert result is None
+
+    @patch('time.sleep')
+    @patch('builtins.print')
+    def test_send_message_with_retry_success_on_second_attempt(self, mock_print, mock_sleep):
+        """Test retry mechanism for sending messages - succeeds on second attempt"""
+        agent = TechResearchAgent()
+        
+        # Mock the client to fail first, then succeed 
+        mock_client = Mock()
+        mock_client.send_message.side_effect = [
+            Exception("First send failed"),
+            True  # Second send succeeds
+        ]
+        agent.client = mock_client
+        
+        mock_message = Mock()
+        
+        result = agent._send_message_with_retry("receiver-id", mock_message)
+        
+        # Should have called send_message twice
+        assert mock_client.send_message.call_count == 2
+        # Should have called sleep once
+        assert mock_sleep.call_count == 1
+        # Should return the success result
+        assert result is True
+
+    @patch('time.sleep')
+    def test_send_message_with_retry_all_failures(self, mock_sleep):
+        """Test retry mechanism for sending messages - fails after all attempts"""
+        agent = TechResearchAgent()
+        agent.max_retries = 3  # Ensure agent uses 3 retries in test
+        
+        # Mock the client to fail every time
+        mock_client = Mock()
+        mock_client.send_message.side_effect = Exception("Always fails")
+        agent.client = mock_client
+        
+        mock_message = Mock()
+        
+        result = agent._send_message_with_retry("receiver-id", mock_message)
+        
+        # Should have called send_message max_retries times
+        assert mock_client.send_message.call_count == 3
+        # Should have called sleep twice (between 3 attempts)
+        assert mock_sleep.call_count == 2
+        # Should return None when all attempts fail
+        assert result is None
+
+    @patch('builtins.print')
+    def test_receive_message_with_error_handling(self, mock_print):
+        """Test error handling in receive_message method"""
+        agent = TechResearchAgent()
+        
+        # Create a message that will cause an exception when processed
+        message = A2AMessage.create_message(
+            MessageType.REQUEST_RESEARCH_TASK,
+            "test-sender",
+            "tech-research-agent",
+            {}
+        )
+        
+        # Mock handle_research_task to raise an exception
+        with patch.object(agent, 'handle_research_task', side_effect=Exception("Processing error")):
+            # This should not raise an exception due to error handling
+            agent.receive_message(message)
+            
+            # Verify that error was logged/printed
+            error_call_found = any("Error processing message" in str(call) for call in mock_print.call_args_list)
+            assert error_call_found
     
     @patch('builtins.print')
     def test_send_tool_request(self, mock_print):

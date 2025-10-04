@@ -149,7 +149,120 @@ class TestFactCheckAgent:
         
         mock_llm_instance.perform_fact_checking.assert_called_once_with(research_results)
         assert result == expected_result
-    
+
+    @patch('time.sleep')
+    @patch('agents.factcheck_agent.factcheck_agent.FactCheckAgent.perform_fact_checking')
+    def test_perform_fact_checking_with_retry_success_on_second_attempt(self, mock_perform_fact_checking, mock_sleep):
+        """Test retry mechanism for fact-checking - succeeds on second attempt"""
+        agent = FactCheckAgent()
+        
+        # Configure mock to fail first, then succeed
+        mock_perform_fact_checking.side_effect = [
+            Exception("First attempt failed"),
+            {"result": "success"}
+        ]
+        
+        research_results = {"test": "data"}
+        
+        result = agent._perform_fact_checking_with_retry(research_results)
+        
+        # Should have called perform_fact_checking twice
+        assert mock_perform_fact_checking.call_count == 2
+        # Should have called sleep once (between attempts)
+        assert mock_sleep.call_count == 1
+        # Should return the success result
+        assert result == {"result": "success"}
+
+    @patch('time.sleep')
+    @patch('agents.factcheck_agent.factcheck_agent.FactCheckAgent.perform_fact_checking')
+    def test_perform_fact_checking_with_retry_all_failures(self, mock_perform_fact_checking, mock_sleep):
+        """Test retry mechanism for fact-checking - fails after all attempts"""
+        agent = FactCheckAgent()
+        agent.max_retries = 3  # Ensure agent uses 3 retries in test
+        
+        # Configure mock to fail every time
+        mock_perform_fact_checking.side_effect = Exception("Always fails")
+        
+        research_results = {"test": "data"}
+        
+        result = agent._perform_fact_checking_with_retry(research_results)
+        
+        # Should have called perform_fact_checking max_retries times
+        assert mock_perform_fact_checking.call_count == 3
+        # Should have called sleep twice (between 3 attempts)
+        assert mock_sleep.call_count == 2
+        # Should return None when all attempts fail
+        assert result is None
+
+    @patch('time.sleep')
+    @patch('builtins.print')
+    def test_send_message_with_retry_success_on_second_attempt(self, mock_print, mock_sleep):
+        """Test retry mechanism for sending messages - succeeds on second attempt"""
+        agent = FactCheckAgent()
+        
+        # Mock the client to fail first, then succeed 
+        mock_client = Mock()
+        mock_client.send_message.side_effect = [
+            Exception("First send failed"),
+            True  # Second send succeeds
+        ]
+        agent.client = mock_client
+        
+        mock_message = Mock()
+        
+        result = agent._send_message_with_retry("receiver-id", mock_message)
+        
+        # Should have called send_message twice
+        assert mock_client.send_message.call_count == 2
+        # Should have called sleep once
+        assert mock_sleep.call_count == 1
+        # Should return the success result
+        assert result is True
+
+    @patch('time.sleep')
+    def test_send_message_with_retry_all_failures(self, mock_sleep):
+        """Test retry mechanism for sending messages - fails after all attempts"""
+        agent = FactCheckAgent()
+        agent.max_retries = 3  # Ensure agent uses 3 retries in test
+        
+        # Mock the client to fail every time
+        mock_client = Mock()
+        mock_client.send_message.side_effect = Exception("Always fails")
+        agent.client = mock_client
+        
+        mock_message = Mock()
+        
+        result = agent._send_message_with_retry("receiver-id", mock_message)
+        
+        # Should have called send_message max_retries times
+        assert mock_client.send_message.call_count == 3
+        # Should have called sleep twice (between 3 attempts)
+        assert mock_sleep.call_count == 2
+        # Should return None when all attempts fail
+        assert result is None
+
+    @patch('builtins.print')
+    def test_receive_message_with_error_handling(self, mock_print):
+        """Test error handling in receive_message method"""
+        agent = FactCheckAgent()
+        
+        # Create a message that will cause an exception when processed
+        message = A2AMessage.create_message(
+            MessageType.REQUEST_FACTCHECK_VERIFY,
+            "test-sender",
+            "factcheck-agent",
+            {}
+        )
+        
+        # Mock handle_verification_request to raise an exception
+        with patch.object(agent, 'handle_verification_request', side_effect=Exception("Processing error")):
+            # This should not raise an exception due to error handling
+            agent.receive_message(message)
+            
+            # Verify that error was logged/printed
+            error_call_found = any("Error processing message" in str(call) for call in mock_print.call_args_list)
+            assert error_call_found
+
     @patch('builtins.print')
     def test_send_tool_request(self, mock_print):
         """Test sending tool requests"""

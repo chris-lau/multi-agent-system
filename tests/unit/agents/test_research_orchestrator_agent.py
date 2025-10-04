@@ -23,6 +23,7 @@ class TestResearchOrchestratorAgent:
         assert agent.agents == {
             "tech": "tech-research-agent",
             "economic": "economic-research-agent",
+            "social_cultural": "social-cultural-research-agent",
             "factcheck": "factcheck-agent"
         }
         assert agent.supported_message_types == [
@@ -153,7 +154,8 @@ class TestResearchOrchestratorAgent:
         agent = ResearchOrchestratorAgent()
         agent.research_results = {
             "tech": {"finding": "tech finding"},
-            "economic": {"finding": "economic finding"}
+            "economic": {"finding": "economic finding"},
+            "social_cultural": {"finding": "social cultural finding"}
         }
         
         result = agent.all_research_results_collected()

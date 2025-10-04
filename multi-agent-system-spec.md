@@ -42,12 +42,14 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 - **Configuration**: Supports JSON-based workflow definitions for custom orchestrator behavior
 
 #### 2. Technology Agent
-- **Role**: Analyzes technical aspects of queries using specialized tools with autonomous discovery and selection
+- **Role**: Analyzes technical aspects of queries using specialized tools with autonomous discovery and selection, with enhanced error handling and retry mechanisms
 - **A2A Capabilities**:
   - Receives tech-focused sub-queries from orchestrators
   - Performs technical analysis
   - Returns tech-focused results
   - Discovers and selects appropriate tools autonomously
+  - Implements error handling and retry mechanisms for robust operation
+  - Provides logging and monitoring capabilities
 - **A2A Message Types**:
   - `request:task` (incoming)
   - `response:results` (outgoing)
@@ -55,12 +57,14 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - `response:available-tools` (incoming)
 
 #### 3. Economic Agent
-- **Role**: Analyzes economic implications using financial and economic tools with autonomous discovery and selection
+- **Role**: Analyzes economic implications using financial and economic tools with autonomous discovery and selection, with enhanced error handling and retry mechanisms
 - **A2A Capabilities**:
   - Receives economic sub-queries from orchestrators
   - Performs economic analysis
   - Returns economic-focused results
   - Discovers and selects appropriate tools autonomously
+  - Implements error handling and retry mechanisms for robust operation
+  - Provides logging and monitoring capabilities
 - **A2A Message Types**:
   - `request:task` (incoming)
   - `response:results` (outgoing)
@@ -68,12 +72,14 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - `response:available-tools` (incoming)
 
 #### 4. Social/Cultural Agent
-- **Role**: Analyzes social/cultural impacts using sociological tools with autonomous discovery and selection
+- **Role**: Analyzes social/cultural impacts using sociological tools with autonomous discovery and selection, with enhanced error handling and retry mechanisms
 - **A2A Capabilities**:
   - Receives social sub-queries from orchestrators
   - Performs social analysis
   - Returns social-focused results
   - Discovers and selects appropriate tools autonomously
+  - Implements error handling and retry mechanisms for robust operation
+  - Provides logging and monitoring capabilities
 - **A2A Message Types**:
   - `request:task` (incoming)
   - `response:results` (outgoing)
@@ -81,12 +87,14 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
   - `response:available-tools` (incoming)
 
 #### 5. Fact-Checking Agent
-- **Role**: Validates information from other agents using fact-checking tools with autonomous discovery and selection
+- **Role**: Validates information from other agents using fact-checking tools with autonomous discovery and selection, with enhanced error handling and retry mechanisms
 - **A2A Capabilities**:
   - Receives claims to verify from orchestrators
   - Cross-references multiple sources
   - Returns validation results
   - Discovers and selects appropriate tools autonomously
+  - Implements error handling and retry mechanisms for robust operation
+  - Provides logging and monitoring capabilities
 - **A2A Message Types**:
   - `request:factcheck:verify` (incoming)
   - `response:factcheck:results` (outgoing)
@@ -269,11 +277,15 @@ A multi-agent system where domain-specific orchestrators coordinate specialized 
 - Support for sequential, parallel, and conditional execution patterns
 - Visual builder compatibility for generating workflow configurations
 
-### Error Handling
+### Error Handling & Monitoring
 - Agents return standardized error responses in A2A format
 - Timeout handling for unresponsive agents
-- Retry logic for failed communications
+- Comprehensive retry logic for failed communications (with configurable retry attempts and delays)
+- Error handling and retry mechanisms implemented in all agents for robust operation
+- Python logging integrated across all agents for monitoring and debugging
 - Graceful degradation when agents are unavailable
+- Improved output formatting and structure in orchestrator for better readability
+- Factory pattern implementation for multiple orchestrator types (basic, advanced, custom)
 
 ### Independence & Testing
 - Each agent runs as separate service

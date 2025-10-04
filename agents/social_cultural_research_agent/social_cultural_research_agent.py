@@ -1,6 +1,6 @@
 """
-Economic Research Agent for Multi-Agent Research System
-Implements the Economic Research Agent using A2A protocol with tool capabilities
+Social/Cultural Research Agent for Multi-Agent Research System
+Implements the Social/Cultural Research Agent using A2A protocol with tool capabilities
 """
 from a2a_protocol import A2AMessage, MessageType, A2AClient, get_agent_capabilities
 import json
@@ -10,11 +10,11 @@ import logging
 import time
 
 
-class EconomicResearchAgent:
-    """Economic Research Agent - Analyzes economic implications of queries"""
+class SocialCulturalResearchAgent:
+    """Social/Cultural Research Agent - Analyzes social and cultural impacts of queries"""
     
     def __init__(self):
-        self.agent_id = "economic-research-agent"
+        self.agent_id = "social-cultural-research-agent"
         self.client = A2AClient(self.agent_id)
         self.llm_interface = GeminiLLMInterface()
         
@@ -36,8 +36,8 @@ class EconomicResearchAgent:
         """Return agent capabilities in A2A format"""
         return get_agent_capabilities(
             agent_id=self.agent_id,
-            name="Economic Research Agent",
-            description="Analyzes economic implications of queries, performs economic analysis using Gemini LLM, and uses economic tools for enhanced research",
+            name="Social/Cultural Research Agent",
+            description="Analyzes social and cultural impacts of the query, performs social analysis using Gemini LLM, and uses social/cultural tools for enhanced research",
             supported_types=[
                 MessageType.REQUEST_RESEARCH_TASK.value,
                 MessageType.RESPONSE_TOOL_RESULT.value
@@ -46,8 +46,8 @@ class EconomicResearchAgent:
     
     def receive_message(self, message: A2AMessage):
         """Handle incoming A2A messages"""
-        print(f"Economic Research Agent received message of type: {message.type}")
-        self.logger.info(f"Economic Research Agent received message of type: {message.type}")
+        print(f"Social/Cultural Research Agent received message of type: {message.type}")
+        self.logger.info(f"Social/Cultural Research Agent received message of type: {message.type}")
         
         try:
             if message.type == MessageType.REQUEST_RESEARCH_TASK.value:
@@ -55,8 +55,8 @@ class EconomicResearchAgent:
             elif message.type == MessageType.RESPONSE_TOOL_RESULT.value:
                 self.handle_tool_result(message)
             else:
-                print(f"Economic Research Agent: Unknown message type received: {message.type}")
-                self.logger.warning(f"Economic Research Agent: Unknown message type received: {message.type}")
+                print(f"Social/Cultural Research Agent: Unknown message type received: {message.type}")
+                self.logger.warning(f"Social/Cultural Research Agent: Unknown message type received: {message.type}")
         except Exception as e:
             print(f"Error processing message {message.type}: {str(e)}")
             self.logger.error(f"Error processing message {message.type}: {str(e)}")
@@ -67,13 +67,13 @@ class EconomicResearchAgent:
         query = message.payload.get("query", "")
         context = message.payload.get("context", "")
         
-        print(f"Economic Research Agent processing: {query}")
-        self.logger.info(f"Economic Research Agent processing: {query}")
+        print(f"Social/Cultural Research Agent processing: {query}")
+        self.logger.info(f"Social/Cultural Research Agent processing: {query}")
         
         # Perform research using Gemini LLM with retry mechanism
-        economic_results = self._perform_research_with_retry(query, context)
+        social_cultural_results = self._perform_research_with_retry(query, context)
         
-        if economic_results is None:
+        if social_cultural_results is None:
             print(f"Failed to perform research after {self.max_retries} attempts")
             self.logger.error(f"Failed to perform research after {self.max_retries} attempts")
             # In a real implementation, we might send an error message back
@@ -81,9 +81,9 @@ class EconomicResearchAgent:
         
         # Prepare response
         response_payload = {
-            "agent_type": "economic",
+            "agent_type": "social_cultural",
             "query": query,
-            "results": economic_results
+            "results": social_cultural_results
         }
         
         response_msg = A2AMessage.create_message(
@@ -93,8 +93,8 @@ class EconomicResearchAgent:
             response_payload
         )
         
-        print(f"Economic Research Agent sending results to {message.sender}")
-        self.logger.info(f"Economic Research Agent sending results to {message.sender}")
+        print(f"Social/Cultural Research Agent sending results to {message.sender}")
+        self.logger.info(f"Social/Cultural Research Agent sending results to {message.sender}")
         
         # Send message with retry mechanism
         self._send_message_with_retry(message.sender, response_msg)
@@ -105,7 +105,7 @@ class EconomicResearchAgent:
         for attempt in range(self.max_retries):
             try:
                 self.logger.info(f"Attempt {attempt + 1}/{self.max_retries} for research task")
-                return self.perform_economic_research(query, context)
+                return self.perform_social_cultural_research(query, context)
             except Exception as e:
                 last_exception = e
                 self.logger.warning(f"Attempt {attempt + 1} failed: {str(e)}")
@@ -134,12 +134,12 @@ class EconomicResearchAgent:
         """Handle results from tool execution"""
         tool_id = message.payload.get("tool_id", "unknown")
         result = message.payload.get("result", {})
-        print(f"Economic Research Agent received tool result from {tool_id}: {result}")
+        print(f"Social/Cultural Research Agent received tool result from {tool_id}: {result}")
         # In a real implementation, we would incorporate the tool result into our research process
     
-    def perform_economic_research(self, query: str, context: str) -> Dict[str, Any]:
-        """Perform economic research using Gemini LLM"""
-        return self.llm_interface.perform_economic_research(query, context)
+    def perform_social_cultural_research(self, query: str, context: str) -> Dict[str, Any]:
+        """Perform social/cultural research using Gemini LLM"""
+        return self.llm_interface.perform_social_cultural_research(query, context)
     
     def send_tool_request(self, tool_id: str, parameters: Dict[str, Any], receiver: str = "tool-service"):
         """Send a request to use a specific tool"""
@@ -155,5 +155,5 @@ class EconomicResearchAgent:
             tool_payload
         )
         
-        print(f"Economic Research Agent requesting tool execution: {tool_id}")
+        print(f"Social/Cultural Research Agent requesting tool execution: {tool_id}")
         self.client.send_message(receiver, tool_msg)
