@@ -6,6 +6,8 @@ from a2a_protocol import A2AMessage, MessageType, A2AClient, get_agent_capabilit
 import json
 from typing import Dict, Any
 from llm_interface import GeminiLLMInterface
+import logging
+import time
 
 
 class TechResearchAgent:
@@ -16,11 +18,19 @@ class TechResearchAgent:
         self.client = A2AClient(self.agent_id)
         self.llm_interface = GeminiLLMInterface()
         
+        # Setup logging
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger(f"{self.agent_id}")
+        
         # Define supported message types
         self.supported_message_types = [
             MessageType.REQUEST_RESEARCH_TASK.value,
             MessageType.RESPONSE_TOOL_RESULT.value
         ]
+        
+        # Retry configuration
+        self.max_retries = 3
+        self.retry_delay = 1  # seconds
     
     def get_capabilities(self):
         """Return agent capabilities in A2A format"""
@@ -37,13 +47,20 @@ class TechResearchAgent:
     def receive_message(self, message: A2AMessage):
         """Handle incoming A2A messages"""
         print(f"Tech Research Agent received message of type: {message.type}")
+        self.logger.info(f"Tech Research Agent received message of type: {message.type}")
         
-        if message.type == MessageType.REQUEST_RESEARCH_TASK.value:
-            self.handle_research_task(message)
-        elif message.type == MessageType.RESPONSE_TOOL_RESULT.value:
-            self.handle_tool_result(message)
-        else:
-            print(f"Tech Research Agent: Unknown message type received: {message.type}")
+        try:
+            if message.type == MessageType.REQUEST_RESEARCH_TASK.value:
+                self.handle_research_task(message)
+            elif message.type == MessageType.RESPONSE_TOOL_RESULT.value:
+                self.handle_tool_result(message)
+            else:
+                print(f"Tech Research Agent: Unknown message type received: {message.type}")
+                self.logger.warning(f"Tech Research Agent: Unknown message type received: {message.type}")
+        except Exception as e:
+            print(f"Error processing message {message.type}: {str(e)}")
+            self.logger.error(f"Error processing message {message.type}: {str(e)}")
+            # In a real implementation, we might want to send an error response
     
     def handle_research_task(self, message: A2AMessage):
         """Process a research task and respond with results"""
@@ -51,9 +68,16 @@ class TechResearchAgent:
         context = message.payload.get("context", "")
         
         print(f"Tech Research Agent processing: {query}")
+        self.logger.info(f"Tech Research Agent processing: {query}")
         
-        # Perform research using Gemini LLM
-        tech_results = self.perform_technical_research(query, context)
+        # Perform research using Gemini LLM with retry mechanism
+        tech_results = self._perform_research_with_retry(query, context)
+        
+        if tech_results is None:
+            print(f"Failed to perform research after {self.max_retries} attempts")
+            self.logger.error(f"Failed to perform research after {self.max_retries} attempts")
+            # In a real implementation, we might send an error message back
+            return
         
         # Prepare response
         response_payload = {
@@ -70,7 +94,41 @@ class TechResearchAgent:
         )
         
         print(f"Tech Research Agent sending results to {message.sender}")
-        self.client.send_message(message.sender, response_msg)
+        self.logger.info(f"Tech Research Agent sending results to {message.sender}")
+        
+        # Send message with retry mechanism
+        self._send_message_with_retry(message.sender, response_msg)
+    
+    def _perform_research_with_retry(self, query: str, context: str):
+        """Perform research with retry mechanism"""
+        last_exception = None
+        for attempt in range(self.max_retries):
+            try:
+                self.logger.info(f"Attempt {attempt + 1}/{self.max_retries} for research task")
+                return self.perform_technical_research(query, context)
+            except Exception as e:
+                last_exception = e
+                self.logger.warning(f"Attempt {attempt + 1} failed: {str(e)}")
+                if attempt < self.max_retries - 1:  # Don't sleep on the last attempt
+                    time.sleep(self.retry_delay)
+        
+        self.logger.error(f"All {self.max_retries} attempts failed. Last error: {str(last_exception)}")
+        return None
+    
+    def _send_message_with_retry(self, receiver: str, message: A2AMessage):
+        """Send message with retry mechanism"""
+        last_exception = None
+        for attempt in range(self.max_retries):
+            try:
+                self.logger.info(f"Attempt {attempt + 1}/{self.max_retries} to send message")
+                return self.client.send_message(receiver, message)
+            except Exception as e:
+                last_exception = e
+                self.logger.warning(f"Attempt {attempt + 1} to send message failed: {str(e)}")
+                if attempt < self.max_retries - 1:  # Don't sleep on the last attempt
+                    time.sleep(self.retry_delay)
+        
+        self.logger.error(f"Failed to send message after {self.max_retries} attempts. Last error: {str(last_exception)}")
     
     def handle_tool_result(self, message: A2AMessage):
         """Handle results from tool execution"""

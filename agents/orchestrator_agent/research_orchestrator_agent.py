@@ -20,6 +20,7 @@ class ResearchOrchestratorAgent:
         self.agents = {
             "tech": "tech-research-agent",
             "economic": "economic-research-agent",
+            "social_cultural": "social-cultural-research-agent",
             "factcheck": "factcheck-agent"
         }
         
@@ -82,7 +83,7 @@ class ResearchOrchestratorAgent:
     
     def all_research_results_collected(self) -> bool:
         """Check if results from all research agents have been collected"""
-        required_agents = ["tech", "economic"]
+        required_agents = ["tech", "economic", "social_cultural"]
         return all(agent in self.research_results for agent in required_agents)
     
     def send_results_to_factchecker(self):
@@ -163,9 +164,12 @@ class ResearchOrchestratorAgent:
         
         # Add each agent's validated results
         for agent_type, result in self.research_results.items():
-            report_parts.append(f"\n{agent_type.upper()} RESEARCH:")
+            # Format the agent type name better for display
+            formatted_agent_type = agent_type.replace('_', ' ').upper()
+            report_parts.append(f"\n{formatted_agent_type} RESEARCH:")
             report_parts.append(f"Findings: {result.get('findings', 'Not available')}")
             report_parts.append(f"Sources: {result.get('sources', 'Not available')}")
             report_parts.append(f"Validation: {validation_results.get(agent_type, 'Not validated')}")
+            report_parts.append("")  # Add spacing between sections
         
         return "\n".join(report_parts)

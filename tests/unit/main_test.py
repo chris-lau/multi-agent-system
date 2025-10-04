@@ -211,3 +211,15 @@ def test_main_script_execution():
     """Test that main can be executed as a script"""
     # Verify that __name__ check works
     assert __name__ != "__main__"  # This is running as a test, not as main
+
+@pytest.mark.parametrize(
+    "orchestrator_type",
+    ["basic", "advanced", "custom", "unknown-type"],
+)
+def test_create_orchestrator_types(orchestrator_type):
+    """Verify create_orchestrator returns the default agent for supported types"""
+    from main import create_orchestrator
+    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
+
+    orchestrator = create_orchestrator(orchestrator_type)
+    assert isinstance(orchestrator, ResearchOrchestratorAgent)

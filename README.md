@@ -5,15 +5,19 @@ This project implements a multi-agent system that uses specialized agents to add
 ## Features
 
 - **Configurable Orchestrator Agent**: Coordinates tasks, aggregates results from specialized agents; supports multiple orchestrator types (basic, advanced, custom workflows)
-- **Technology Agent**: Performs technical analysis using Gemini LLM
-- **Economic Agent**: Performs economic analysis using Gemini LLM
-- **Social/Cultural Agent**: Analyzes social and cultural impacts using Gemini LLM
-- **Fact-Checking Agent**: Validates information from other agents using Gemini LLM
+- **Technology Agent**: Performs technical analysis using Gemini LLM with error handling and retry mechanisms
+- **Economic Agent**: Performs economic analysis using Gemini LLM with error handling and retry mechanisms
+- **Social/Cultural Agent**: Analyzes social and cultural impacts using Gemini LLM with error handling and retry mechanisms
+- **Fact-Checking Agent**: Validates information from other agents using Gemini LLM with error handling and retry mechanisms
 - **A2A Protocol Compliance**: Standardized communication between agents
 - **Tool Framework**: Enhanced capabilities through integrated tools with autonomous discovery and selection
 - **JSON-Based Workflow Configuration**: Custom orchestrator behaviors using JSON configuration files
 - **Modular Architecture**: Agents can be developed and tested independently
 - **Visual Orchestrator Builder Ready**: Compatible with visual interface for creating custom task workflows (future feature)
+- **Enhanced Error Handling**: Comprehensive error handling and retry mechanisms across all agents
+- **Logging and Monitoring**: Integrated logging for monitoring agent behavior and debugging
+- **Improved Output Formatting**: Better structured and formatted output reports
+- **Comprehensive Test Coverage**: Extensive unit and integration tests covering all functionality
 
 ## Prerequisites
 
@@ -33,7 +37,7 @@ This project implements a multi-agent system that uses specialized agents to add
 Run the system with optional arguments:
 
 ```bash
-python main.py [--api-key API_KEY] [--query "Your task or query here"] [--model MODEL_NAME]
+python main.py [--api-key API_KEY] [--query "Your task or query here"] [--model MODEL_NAME] [--orchestrator ORCHESTRATOR_TYPE]
 ```
 
 ### Options:
@@ -87,8 +91,8 @@ If no API key is provided, the system will use mock responses for demonstration 
 ## Architecture
 
 - `a2a_protocol.py`: Implements the A2A protocol for agent communication
-- `llm_interface.py`: Interfaces with Google's Gemini LLM
-- `main.py`: Entry point with argument parsing
+- `llm_interface.py`: Interfaces with Google's Gemini LLM with enhanced error handling
+- `main.py`: Entry point with argument parsing and orchestrator factory
 - `tools/`: Tool framework and execution service
   - `tool_framework.py`: Base classes and interfaces for tools
   - `tool_execution_service.py`: Service for executing tools with parallel execution capabilities
@@ -98,23 +102,24 @@ If no API key is provided, the system will use mock responses for demonstration 
   - `document_parser_tool/`: Document parsing tool implementation  
   - `statistical_analysis_tool/`: Statistical analysis tool implementation
 - `demo_tools.py`: Demo script showcasing the tool framework
-- `tests/`: Test suite for the entire system
+- `tests/`: Comprehensive test suite for the entire system
   - `integration/test_tool_integration.py`: Test script specifically for tool integration
   - `unit/core/test_llm_interface.py`: Tests for LLM interface functionality
   - `unit/tools/test_tool_execution_service.py`: Tests for tool execution service
-- `agents/`: Contains individual agent implementations
+  - `unit/agents/test_*.py`: Unit tests for each agent with complete coverage
+- `agents/`: Contains individual agent implementations with error handling, logging, and retry mechanisms
   - `orchestrator_agent/`: Orchestrator agent directory
-    - `research_orchestrator_agent.py`: Coordinates the task process
+    - `research_orchestrator_agent.py`: Coordinates the task process with improved output formatting
     - `README.md`: Documentation for the orchestrator agent
   - `tech_research_agent/`: Tech agent directory (current implementation focused on research tasks)
-    - `tech_research_agent.py`: Performs technical analysis
+    - `tech_research_agent.py`: Performs technical analysis with error handling and retry mechanisms
     - `README.md`: Documentation for the tech agent
   - `economic_research_agent/`: Economic agent directory (current implementation focused on research tasks)
-    - `economic_research_agent.py`: Performs economic analysis
+    - `economic_research_agent.py`: Performs economic analysis with error handling and retry mechanisms
     - `README.md`: Documentation for the economic agent
   - `social_cultural_research_agent/`: Social/Cultural agent directory (current implementation focused on research tasks)
-    - `social_cultural_research_agent.py`: Analyzes social and cultural impacts
+    - `social_cultural_research_agent.py`: Analyzes social and cultural impacts with error handling and retry mechanisms
     - `README.md`: Documentation for the social/cultural agent
   - `factcheck_agent/`: Fact-check agent directory
-    - `factcheck_agent.py`: Validates results
+    - `factcheck_agent.py`: Validates results with error handling and retry mechanisms
     - `README.md`: Documentation for the fact-check agent

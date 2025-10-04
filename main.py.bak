@@ -50,23 +50,6 @@ class MessageRouter:
                     print(f"Router: Unknown receiver {message.receiver}")
 
 
-def create_orchestrator(orchestrator_type: str):
-    """Factory function to create appropriate orchestrator based on type"""
-    if orchestrator_type == 'advanced':
-        # For now, use the same ResearchOrchestratorAgent for advanced
-        # In a complete implementation, we'd have an AdvancedResearchOrchestratorAgent
-        from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-        return ResearchOrchestratorAgent()
-    elif orchestrator_type == 'custom':
-        # For now, use the same ResearchOrchestratorAgent for custom 
-        # In a complete implementation, we'd have a CustomResearchOrchestratorAgent
-        from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-        return ResearchOrchestratorAgent()
-    else:  # default to basic
-        from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-        return ResearchOrchestratorAgent()
-
-
 def main():
     parser = argparse.ArgumentParser(description='Multi-Agent Research & Analysis System')
     parser.add_argument('--api-key', type=str, help='Google Gemini API key (optional)')
