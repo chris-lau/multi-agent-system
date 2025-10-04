@@ -212,38 +212,14 @@ def test_main_script_execution():
     # Verify that __name__ check works
     assert __name__ != "__main__"  # This is running as a test, not as main
 
-
-def test_create_orchestrator_basic():
-    """Test create_orchestrator function with basic type"""
+@pytest.mark.parametrize(
+    "orchestrator_type",
+    ["basic", "advanced", "custom", "unknown-type"],
+)
+def test_create_orchestrator_types(orchestrator_type):
+    """Verify create_orchestrator returns the default agent for supported types"""
     from main import create_orchestrator
     from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-    
-    orchestrator = create_orchestrator('basic')
-    assert isinstance(orchestrator, ResearchOrchestratorAgent)
 
-
-def test_create_orchestrator_advanced():
-    """Test create_orchestrator function with advanced type"""
-    from main import create_orchestrator
-    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-    
-    orchestrator = create_orchestrator('advanced')
-    assert isinstance(orchestrator, ResearchOrchestratorAgent)
-
-
-def test_create_orchestrator_custom():
-    """Test create_orchestrator function with custom type"""
-    from main import create_orchestrator
-    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-    
-    orchestrator = create_orchestrator('custom')
-    assert isinstance(orchestrator, ResearchOrchestratorAgent)
-
-
-def test_create_orchestrator_default():
-    """Test create_orchestrator function with default behavior"""
-    from main import create_orchestrator
-    from agents.orchestrator_agent.research_orchestrator_agent import ResearchOrchestratorAgent
-    
-    orchestrator = create_orchestrator('unknown-type')
+    orchestrator = create_orchestrator(orchestrator_type)
     assert isinstance(orchestrator, ResearchOrchestratorAgent)
