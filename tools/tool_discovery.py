@@ -43,7 +43,7 @@ def discover_tools_in_directory(tool_dir_path: str) -> List[Type[Tool]]:
                     if issubclass(obj, Tool) and obj != Tool:
                         tool_classes.append(obj)
                         
-            except ImportError as e:
+            except (ImportError, SyntaxError) as e:
                 print(f"Could not import module {module_name}: {e}")
     
     # Remove the tool directory from Python path

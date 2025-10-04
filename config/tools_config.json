@@ -9,19 +9,19 @@
     "supported_formats": [
       "pdf",
       "docx",
-      "txt",
-      "rtf"
+      "txt"
     ],
     "max_file_size_mb": 10,
     "enable_caching": true,
     "cache_duration_minutes": 1440
   },
   "statistical_analysis_tool": {
-    "max_data_points": 10000,
+    "max_data_points": 5000,
     "precision": 2,
     "supported_analysis_types": [
       "descriptive",
-      "correlation"
+      "correlation",
+      "regression"
     ]
   }
 }

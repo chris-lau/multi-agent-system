@@ -4,6 +4,10 @@ Pytest configuration and fixtures for the Multi-Agent Research & Analysis System
 import os
 import pytest
 from unittest.mock import patch, MagicMock
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__))))
+
 from llm_interface import GeminiLLMInterface
 from tools.tool_framework import ToolRegistry
 from tools.tool_execution_service import ToolExecutionService
